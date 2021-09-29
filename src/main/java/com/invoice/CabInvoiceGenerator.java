@@ -23,5 +23,12 @@ public class CabInvoiceGenerator {
 		}
 		return Fare;
 	}
+	public EnhancedInvoice getEnhancedInvoice(Ride[] rides) {
+	
+			double totalFare= calculateFare(rides);
+			EnhancedInvoice invoice = new EnhancedInvoice(totalFare, rides.length);
 
-}
+			return invoice;
+
+		}
+	}
