@@ -1,7 +1,6 @@
 package com.invoice;
 
-import static org.junit.Assert.*;
-
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,50 +23,133 @@ public class CabInvoiceGeneratorTest {
 	 */
 	@Test
 	public void MatchofFareRide() {
-		CabInvoiceGenerator cabinvoiceGenerator = new CabInvoiceGenerator();
-		Ride[] rides = { new Ride(10.0, 8), new Ride(1, 3) };
-		double Fare = cabinvoiceGenerator.calculateFare(rides);
-		Assert.assertEquals(121, Fare, 0.0);
+
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 3, 1));
+
+		double expectedTotalFare = 224;
+		double epsilon = 1e-15;
+		Assert.assertEquals(expectedTotalFare, cabInvoiceGenerator.calculateFare(rideRepository.getRides()), epsilon);
+
 	}
 
 	/*
-	 * the test passes when number of rides matches
+	 * the test passes when number of rides matches The test Matches when the Total
+	 * 
+	 * 
 	 */
 	@Test
 	public void givenMultipleRide_matchingWithTotalNumberOfRide_returnsTrue() {
-		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
-		Ride[] rides = { new Ride(10.0, 8), new Ride(1, 3) };
-		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rides);
-		int expectedTotalRides = 2;
-		Assert.assertEquals(expectedTotalRides, invoice.getTotalNumOfRides());
 
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 3, 1));
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rideRepository.getRides());
+		int expectedTotalRides = 3;
+
+		Assert.assertEquals(expectedTotalRides, invoice.getTotalNumOfRides());
 	}
 
 	/*
-	 * The test Matches when the Total fare matches the expected fare
+	 * The test passes when the expected Total fare matches the calculated fare
 	 */
 	@Test
 	public void givenMultipleRide_matchingWithTotalFare_returnsTrue() {
+
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
-		Ride[] rides = { new Ride(10, 8), new Ride(1, 3) };
-		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rides);
-		double expectedTotalFare = 121;
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 3, 1));
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rideRepository.getRides());
+
+		double expectedTotalFare = 224;
+
 		double epsilon = 1e-15;
+
 		Assert.assertEquals(expectedTotalFare, invoice.getTotalFare(), epsilon);
+	}
+
+	/*
+	 * The test passes when expected Average fare matches the calculated fare
+	 */
+	@Test
+	public void givenMultipleRide_matchingWithAvgFareperRide_returnsTrue() {
+
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 4, 1));
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rideRepository.getRides());
+
+		double expectedAvgFare = 75;
+		double epsilon = 1e-15;
+
+		Assert.assertEquals(expectedAvgFare, invoice.getAvgFarePerRide(), epsilon);
+	}
+
+	/*
+	 * This test passes when user id matches and on Correct matching of Total Fare
+	 */
+	@Test
+	public void givenMultipleRideOfDifferentCustomer_matchingWithNUmberOfRidesOfCustomer1_returnsTrue() {
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 3, 1));
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
+				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
+
+		int expectedTotalRideofUser1 = 2;
+		double epsilon = 1e-15;
+		Assert.assertEquals(expectedTotalRideofUser1, invoice.getTotalNumOfRides(), epsilon);
 
 	}
 
 	/*
-	 * The test passes when the expected average fare equals the Generated fare
+	 * This test passes when user id matches and on Correct matching of TotalFare
 	 */
 	@Test
-	public void givenMultipleRide_matchingWithAverageFare_returnsTrue() {
+	public void givenMultipleRideOfDifferentCustomer_matchingWithTotalFareOfCustomer1_returnsTrue() {
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
-		Ride[] rides = { new Ride(10, 8), new Ride(1, 3) };
-		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rides);
-		double expectedTotalFare = 60.5;
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 4, 1));
+
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
+				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
+
+		double expectedTotalFareofUser1 = 212;
 		double epsilon = 1e-15;
-		Assert.assertEquals(expectedTotalFare, invoice.getAvgFarePerRide(), epsilon);
+		Assert.assertEquals(expectedTotalFareofUser1, invoice.getTotalFare(), epsilon);
+
+	}
+
+	/*
+	 * This test passes when user id matches and on Correct matching of average fare
+	 */
+	@Test
+	public void givenMultipleRideOfDifferentCustomer_matchingWithAverageFareOfCustomer1_returnsTrue() {
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1));
+		rideRepository.addRide(new Ride(1, 3, 2));
+		rideRepository.addRide(new Ride(10, 4, 1));
+
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
+				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
+
+		double expectedAvgFareofUser1 = 106;
+		double epsilon = 1e-15;
+		Assert.assertEquals(expectedAvgFareofUser1, invoice.getAvgFarePerRide(), epsilon);
 
 	}
 
