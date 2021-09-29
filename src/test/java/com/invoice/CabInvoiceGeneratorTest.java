@@ -13,7 +13,7 @@ public class CabInvoiceGeneratorTest {
 		CabInvoiceGenerator cabinvoiceGenerator = new CabInvoiceGenerator();
 		double distance = 10.0;
 		int time = 8;
-		double Fare = cabinvoiceGenerator.generateFare(distance, time);
+		double Fare = cabinvoiceGenerator.generateFare("Normal",distance, time);
 		Assert.assertEquals(108, Fare, 0.0);
 	}
 
@@ -26,9 +26,9 @@ public class CabInvoiceGeneratorTest {
 
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 3, 1));
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 3, 1,"Normal"));
 
 		double expectedTotalFare = 224;
 		double epsilon = 1e-15;
@@ -46,9 +46,9 @@ public class CabInvoiceGeneratorTest {
 
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 3, 1));
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 3, 1,"Normal"));
 		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rideRepository.getRides());
 		int expectedTotalRides = 3;
 
@@ -63,9 +63,9 @@ public class CabInvoiceGeneratorTest {
 
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 3, 1));
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 3, 1,"Normal"));
 		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rideRepository.getRides());
 
 		double expectedTotalFare = 224;
@@ -83,9 +83,9 @@ public class CabInvoiceGeneratorTest {
 
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 4, 1));
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 4, 1,"Normal"));
 		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(rideRepository.getRides());
 
 		double expectedAvgFare = 75;
@@ -101,9 +101,9 @@ public class CabInvoiceGeneratorTest {
 	public void givenMultipleRideOfDifferentCustomer_matchingWithNUmberOfRidesOfCustomer1_returnsTrue() {
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 3, 1));
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 4, 1,"Normal"));
 		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
 				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
 
@@ -120,9 +120,9 @@ public class CabInvoiceGeneratorTest {
 	public void givenMultipleRideOfDifferentCustomer_matchingWithTotalFareOfCustomer1_returnsTrue() {
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 4, 1));
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 4, 1,"Normal"));
 
 		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
 				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
@@ -140,10 +140,9 @@ public class CabInvoiceGeneratorTest {
 	public void givenMultipleRideOfDifferentCustomer_matchingWithAverageFareOfCustomer1_returnsTrue() {
 		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
 		RideRepo rideRepository = new RideRepo();
-		rideRepository.addRide(new Ride(10, 8, 1));
-		rideRepository.addRide(new Ride(1, 3, 2));
-		rideRepository.addRide(new Ride(10, 4, 1));
-
+		rideRepository.addRide(new Ride(10, 8, 1,"Normal"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 4, 1,"Normal"));
 		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
 				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
 
@@ -152,5 +151,45 @@ public class CabInvoiceGeneratorTest {
 		Assert.assertEquals(expectedAvgFareofUser1, invoice.getAvgFarePerRide(), epsilon);
 
 	}
+	/**
+	 * Test for the total fare of customer over different ride type
+	 */
+	@Test
+	public void givenMultipleRideOfSingleCustomerOfDiffereentType_matchingWithTotalFareOfCustomer_returnsTrue() {
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+		rideRepository.addRide(new Ride(10, 8, 1,"Premium"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 4, 1,"Normal"));
+
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
+				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
+
+		double expectedTotalFareofUser1 = 270;
+		double epsilon = 1e-15;
+		Assert.assertEquals(expectedTotalFareofUser1, invoice.getTotalFare(), epsilon);
+
+	}
+
+	/**
+	 * Test for the average fare of customer over different ride type
+	 */
+	@Test
+	public void givenMultipleRideOfSingleCustomerOfDiffereentType_matchingWithAverageFareOfCustomer_returnsTrue() {
+		CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
+		RideRepo rideRepository = new RideRepo();
+
+		rideRepository.addRide(new Ride(10, 8, 1,"Premium"));
+		rideRepository.addRide(new Ride(1, 3, 2,"Normal"));
+		rideRepository.addRide(new Ride(10, 4, 1,"Normal"));
+		EnhancedInvoice invoice = cabInvoiceGenerator.getEnhancedInvoice(
+				rideRepository.getRides().stream().filter(ride -> ride.getUserId() == 1).collect(Collectors.toList()));
+
+		double expectedTotalFareofUser1 = 135;
+		double epsilon = 1e-15;
+		Assert.assertEquals(expectedTotalFareofUser1, invoice.getAvgFarePerRide(), epsilon);
+
+	}
 
 }
+
