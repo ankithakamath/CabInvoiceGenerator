@@ -1,10 +1,13 @@
 package com.invoice;
 
+import java.util.List;
+
 public class CabInvoiceGenerator {
 	private int Minimum = 5;
-/*
- * Method to generate fare 
- */
+
+	/*
+	 * Method to generate fare
+	 */
 	public double generateFare(double distance, int time) {
 		double cost = distance * 10;
 		cost = cost + (time * 1);
@@ -13,22 +16,23 @@ public class CabInvoiceGenerator {
 		else
 			return Minimum;
 	}
-/*
- * method to generate fare for multiple rides is added
- */
-	public double calculateFare(Ride[] rides) {
+
+	/*
+	 * method to generate fare for multiple rides is added
+	 */
+	public double calculateFare(List<Ride> rides) {
 		double Fare = 0;
 		for (Ride ride : rides) {
 			Fare += this.generateFare(ride.distance, ride.time);
 		}
 		return Fare;
 	}
-	public EnhancedInvoice getEnhancedInvoice(Ride[] rides) {
-	
-			double totalFare= calculateFare(rides);
-			EnhancedInvoice invoice = new EnhancedInvoice(totalFare, rides.length);
 
-			return invoice;
+	public EnhancedInvoice getEnhancedInvoice(List<Ride> rides) {
 
-		}
+		double totalFare = calculateFare(rides);
+		EnhancedInvoice invoice = new EnhancedInvoice(totalFare, rides.size());
+
+		return invoice;
 	}
+}
